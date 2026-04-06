@@ -1,0 +1,50 @@
+html,
+body,
+#react-entry-point {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  background: transparent;
+}
+
+#app-shell {
+  min-height: 100vh;
+  overflow: auto;
+}
+
+.theme-toggle-button {
+  transition: transform 160ms ease, box-shadow 160ms ease, opacity 160ms ease;
+}
+
+.theme-toggle-button:hover {
+  transform: scale(1.08);
+}
+
+.theme-toggle-button:focus {
+  outline: 2px solid #4da3ff;
+  outline-offset: 2px;
+}
+
+.chart-panel:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 22px 34px rgba(0, 0, 0, 0.22);
+  border-color: #4da3ff !important;
+}
+
+.chart-panel.theme-light:hover {
+  box-shadow: 0 18px 28px rgba(23, 36, 61, 0.14);
+  border-color: #245dff !important;
+}
+
+.kpi-card:hover {
+  transform: translateY(-4px) scale(1.06);
+  box-shadow: 0 20px 32px rgba(0, 0, 0, 0.24);
+  border-color: #4da3ff !important;
+}
+
+.kpi-card.theme-light:hover {
+  box-shadow: 0 18px 30px rgba(23, 36, 61, 0.16);
+  border-color: #245dff !important;
+}

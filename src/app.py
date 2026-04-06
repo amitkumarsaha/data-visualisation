@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from dash import Dash, Input, Output, State, dcc, html
 
 import pandas as pd
@@ -16,8 +18,9 @@ def load_or_build_processed_data() -> tuple[pd.DataFrame, pd.DataFrame]:
 
 
 tidy_data, snapshot_data = load_or_build_processed_data()
+ASSETS_DIR = Path(__file__).resolve().parent.parent / "assets"
 
-app = Dash(__name__)
+app = Dash(__name__, assets_folder=str(ASSETS_DIR))
 app.title = "Argentina Economic Dashboard"
 app.layout = html.Div(
     [
@@ -30,11 +33,11 @@ app.layout = html.Div(
                 title="Switch theme",
                 n_clicks=0,
                 style={
-                    "width": "46px",
-                    "height": "46px",
+                    "width": "23px",
+                    "height": "23px",
                     "borderRadius": "999px",
                     "border": "none",
-                    "fontSize": "1.25rem",
+                    "fontSize": "0.7rem",
                     "cursor": "pointer",
                     "display": "flex",
                     "alignItems": "center",
@@ -102,11 +105,11 @@ def update_theme(theme: str):
         "color": palette["text"],
     }
     button_style = {
-        "width": "46px",
-        "height": "46px",
+        "width": "23px",
+        "height": "23px",
         "borderRadius": "999px",
         "border": "none",
-        "fontSize": "1.25rem",
+        "fontSize": "0.4rem",
         "cursor": "pointer",
         "display": "flex",
         "alignItems": "center",
