@@ -22,6 +22,20 @@ KEY_EVENT_YEARS = {
     2024: "Recent instability",
 }
 
+REGIME_COLORS_DARK = {
+    "Crisis": "#FF5D73",
+    "Recovery": "#2EC4B6",
+    "Recent instability": "#FF8A4C",
+    "Baseline": "#4DA3FF",
+}
+
+REGIME_COLORS_LIGHT = {
+    "Crisis": "#BE245A",
+    "Recovery": "#0D8B78",
+    "Recent instability": "#CC4B00",
+    "Baseline": "#0A5BC4",
+}
+
 
 def format_value(value: float, unit: str) -> str:
     if pd.isna(value):
@@ -49,6 +63,10 @@ def get_series_color(indicator_code: str, theme: str) -> str:
         }
         return SERIES_COLORS_LIGHT[color_key_by_indicator[indicator_code]]
     return INDICATORS[indicator_code]["color"]
+
+
+def get_regime_colors(theme: str) -> dict[str, str]:
+    return REGIME_COLORS_LIGHT if theme == "light" else REGIME_COLORS_DARK
 
 
 def apply_terminal_theme(fig: go.Figure, title: str, height: int, theme: str = "dark") -> go.Figure:
@@ -295,6 +313,7 @@ def build_trade_chart(df: pd.DataFrame, theme: str = "dark") -> go.Figure:
 
 def build_bubble_chart(df: pd.DataFrame, theme: str = "dark") -> go.Figure:
     palette = get_palette(theme)
+    regime_colors = get_regime_colors(theme)
     growth = indicator_frame(df, "NY.GDP.MKTP.KD.ZG")[["year", "value"]].rename(
         columns={"value": "gdp_growth"}
     )
@@ -305,30 +324,30 @@ def build_bubble_chart(df: pd.DataFrame, theme: str = "dark") -> go.Figure:
         columns={"value": "gdp_usd"}
     )
     bubble_df = growth.merge(inflation, on="year").merge(gdp, on="year")
+    bubble_df["regime"] = "Baseline"
+    bubble_df.loc[bubble_df["year"].isin([2001, 2002, 2020]), "regime"] = "Crisis"
+    bubble_df.loc[bubble_df["year"].isin([2003, 2004, 2005, 2021, 2022]), "regime"] = "Recovery"
+    bubble_df.loc[bubble_df["year"].isin([2023, 2024]), "regime"] = "Recent instability"
     fig = px.scatter(
         bubble_df,
         x="gdp_growth",
         y="inflation",
         size="gdp_usd",
-        color="year",
+        color="regime",
         size_max=35,
-        color_continuous_scale=[
-            get_series_color("NY.GDP.MKTP.KD.ZG", theme),
-            get_series_color("NE.EXP.GNFS.ZS", theme),
-            palette["accent"],
-            get_series_color("BN.CAB.XOKA.GD.ZS", theme),
-        ],
+        color_discrete_map=regime_colors,
         labels={
             "gdp_growth": "GDP growth (annual %)",
             "inflation": "Inflation, GDP deflator (%)",
-            "year": "Year",
+            "regime": "Economic regime",
         },
         hover_data={"gdp_usd": ":.3f", "year": True},
     )
     fig.update_traces(
         marker={"opacity": 0.75, "line": {"width": 1, "color": palette["text"]}},
         hovertemplate=(
-            "<b>Year:</b> %{marker.color}<br>"
+            "<b>Year:</b> %{customdata[1]}<br>"
+            "<b>Regime:</b> %{fullData.name}<br>"
             "<b>GDP growth:</b> %{x:.3f}%<br>"
             "<b>Inflation, GDP deflator:</b> %{y:.3f}%<br>"
             "<b>GDP (current US$):</b> %{customdata[0]:.3f}<extra></extra>"
@@ -402,31 +421,76 @@ def build_heatmap(df: pd.DataFrame, theme: str = "dark") -> go.Figure:
         .reindex(INDICATOR_ORDER)
         .astype(float)
     )
+    year_values = heatmap_df.columns.astype(int).tolist()
 
-    normalized = heatmap_df.apply(
-        lambda row: (row - row.mean()) / row.std(ddof=0) if row.std(ddof=0) else row * 0,
-        axis=1,
-    )
-    y_labels = [INDICATORS[code]["short_label"] for code in normalized.index]
+    normalized = heatmap_df.copy()
+    for indicator_code in normalized.index:
+        row = normalized.loc[indicator_code]
+        std = row.std(ddof=0)
+        normalized.loc[indicator_code] = (
+            (row - row.mean()) / std if std and not pd.isna(std) else 0
+        )
+
+    normalized = normalized.fillna(0.0)
+    zmax = float(normalized.abs().to_numpy().max())
+    zmax = max(zmax, 1.0)
+    y_labels = [INDICATORS[code]["short_label"] for code in heatmap_df.index]
+    customdata = []
+    for indicator_code in heatmap_df.index:
+        indicator_custom = []
+        for year in heatmap_df.columns:
+            indicator_custom.append(
+                [
+                    INDICATORS[indicator_code]["short_label"],
+                    int(year),
+                    float(heatmap_df.loc[indicator_code, year]),
+                    INDICATORS[indicator_code]["unit"],
+                ]
+            )
+        customdata.append(indicator_custom)
     fig = go.Figure(
         data=
         go.Heatmap(
             z=normalized.values,
-            x=normalized.columns.tolist(),
+            x=year_values,
             y=y_labels,
+            zmid=0,
+            zmin=-zmax,
+            zmax=zmax,
             colorscale=[
                 [0.0, get_series_color("NY.GDP.MKTP.KD.ZG", theme)],
                 [0.5, palette["panel_alt"]],
                 [0.75, get_series_color("NY.GDP.DEFL.KD.ZG", theme)],
                 [1.0, get_series_color("BN.CAB.XOKA.GD.ZS", theme)],
             ],
+            customdata=customdata,
+            hovertemplate=(
+                "<b>%{customdata[0]}</b><br>"
+                "Year: %{customdata[1]}<br>"
+                "Raw value: %{customdata[2]:.3f} %{customdata[3]}<br>"
+                "Normalized score: %{z:.3f}<extra></extra>"
+            ),
             colorbar={
                 "title": {"text": "Z-score", "font": {"color": palette["text"]}},
                 "tickfont": {"color": palette["text"]},
             },
         )
     )
-    fig.update_xaxes(type="category")
+    fig.update_xaxes(
+        type="linear",
+        tickmode="array",
+        tickvals=year_values,
+        ticktext=[str(year) for year in year_values],
+        range=[min(year_values) - 0.5, max(year_values) + 0.5],
+    )
+    for year in [2002, 2020, 2024]:
+        fig.add_vline(
+            x=year,
+            line_dash="dot",
+            line_width=1,
+            line_color=palette["text"],
+            opacity=0.55,
+        )
     fig.add_annotation(
         xref="paper",
         yref="paper",
