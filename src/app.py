@@ -109,7 +109,6 @@ def update_theme(theme: str):
         "height": "23px",
         "borderRadius": "999px",
         "border": "none",
-        "fontSize": "0.4rem",
         "cursor": "pointer",
         "display": "flex",
         "alignItems": "center",
