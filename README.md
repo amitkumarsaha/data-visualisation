@@ -1,9 +1,8 @@
 # Argentina Economic Dashboard
 
-This project contains a Python Dash dashboard for exploring Argentina's economic performance using the World Bank World Development Indicators (WDI) dataset.
+This project contains a Python Dash dashboard for exploring Argentina's economic performance using the **World Bank World Development Indicators (WDI)** dataset.
 
 The dashboard focuses on three connected themes:
-
 - Macroeconomic stability
 - Trade and openness
 - Crisis and recovery
@@ -11,7 +10,6 @@ The dashboard focuses on three connected themes:
 It uses a polished financial-terminal visual style and presents Argentina's economic trends across the `2000-2024` period.
 
 ## Features
-
 - KPI cards for the latest key macroeconomic indicators
 - GDP growth line chart
 - GDP area chart
@@ -22,25 +20,20 @@ It uses a polished financial-terminal visual style and presents Argentina's econ
 - Heatmap for cross-indicator historical patterns
 
 ## Data Source
+Source: [World Bank World Development Indicators (WDI)](https://databank.worldbank.org/data/download/WDI_CSV.zip)
 
-Source: World Bank World Development Indicators (WDI)
-
-Raw files are expected in:
-
+### Extracted raw files are expected in:
 `data/raw/world-bank/wdi_csv/`
 
-Important raw files:
-
+#### Important raw files:
 - `WDICSV.csv`
 - `WDISeries.csv`
 - `WDICountry.csv`
 
-Processed files are generated in:
-
+### Processed files are generated in:
 `data/processed/`
 
-Generated outputs:
-
+### Generated outputs:
 - `argentina_macro_tidy.csv`
 - `argentina_latest_snapshot.csv`
 
@@ -126,7 +119,6 @@ python -m src.init_data
 ```
 
 ## Selected Indicators
-
 - GDP growth (annual %) `NY.GDP.MKTP.KD.ZG`
 - GDP (current US$) `NY.GDP.MKTP.CD`
 - Inflation, GDP deflator (annual %) `NY.GDP.DEFL.KD.ZG`
@@ -137,7 +129,6 @@ python -m src.init_data
 - Current account balance (% of GDP) `BN.CAB.XOKA.GD.ZS`
 
 ## Notes
-
 - The raw WDI data is kept unchanged in wide format.
 - The dashboard uses processed tidy data for easier filtering and chart generation.
 - Indicator coverage in the processed dashboard dataset is aligned to the selected `2000-2024` series used in the app.

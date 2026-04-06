@@ -1,6 +1,7 @@
 .idea
 
-data/raw/world-bank/wdi_csv
-data/raw/world-bank/processed
+data/raw/world-bank/
+data/raw/world-bank/wdi_csv/
+data/processed/
 
-Notes.md
+notes.md
