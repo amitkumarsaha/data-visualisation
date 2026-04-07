@@ -74,7 +74,7 @@ def build_kpi_card(record: dict, theme: str) -> html.Div:
                         },
                     ),
                     html.Span(
-                        f" {record['year']} | change {record['change']}",
+                        f" {record['year']} | Change {record['change']}",
                         style={
                             "color": palette["muted_text"],
                             "fontSize": "0.85rem",
@@ -152,7 +152,7 @@ def build_layout(tidy_df, snapshot_df, theme: str = "dark") -> html.Div:
                     html.Div(
                         [
                             html.Div(
-                                "ARGENTINA MACRO MONITOR",
+                                "MACRO MONITOR OF ARGENTINA",
                                 style={
                                     "color": palette["accent"],
                                     "fontSize": "0.85rem",

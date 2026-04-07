@@ -21,7 +21,7 @@ tidy_data, snapshot_data = load_or_build_processed_data()
 ASSETS_DIR = Path(__file__).resolve().parent.parent / "assets"
 
 app = Dash(__name__, assets_folder=str(ASSETS_DIR))
-app.title = "Argentina Economic Dashboard"
+app.title = "Economic Dashboard of Argentina"
 app.layout = html.Div(
     [
         dcc.Store(id="theme-store", data="light"),

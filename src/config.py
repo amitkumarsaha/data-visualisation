@@ -13,7 +13,7 @@ RAW_SERIES_PATH = RAW_DATA_DIR / "WDISeries.csv"
 ARGENTINA_TIDY_PATH = PROCESSED_DATA_DIR / "argentina_macro_tidy.csv"
 ARGENTINA_SNAPSHOT_PATH = PROCESSED_DATA_DIR / "argentina_latest_snapshot.csv"
 
-APP_TITLE = "Argentina Economic Dashboard"
+APP_TITLE = "Economic Dashboard of Argentina"
 APP_SUBTITLE = (
     "Macroeconomic Stability, Trade and Openness, Crisis and Recovery (2000-2024)"
 )

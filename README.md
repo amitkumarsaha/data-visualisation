@@ -1,4 +1,4 @@
-# Argentina Economic Dashboard
+# Economic Dashboard of Argentina
 
 This project contains a Python Dash dashboard for exploring Argentina's economic performance using the **World Bank World Development Indicators (WDI)** dataset.
 
