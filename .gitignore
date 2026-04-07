@@ -1,7 +1,9 @@
 .idea
+src/__pycache__/
 
 data/raw/world-bank/
 data/raw/world-bank/wdi_csv/
 data/processed/
 
 notes.md
+/assignment/
