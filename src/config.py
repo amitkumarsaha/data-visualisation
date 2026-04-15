@@ -17,7 +17,8 @@ APP_TITLE = "Economic Dashboard of Argentina"
 APP_SUBTITLE = (
     "Macroeconomic Stability, Trade and Openness, Crisis and Recovery (2000-2024)"
 )
-SOURCE_LABEL = "Source: World Bank World Development Indicators"
+SOURCE_LABEL = "Source: "
+DATA_SOURCE = "World Bank World Development Indicators"
 
 COUNTRY_CODE = "ARG"
 COUNTRY_NAME = "Argentina"

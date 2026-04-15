@@ -12,7 +12,7 @@ from charts import (
     build_latest_position_chart,
     build_trade_chart,
 )
-from src.config import APP_SUBTITLE, APP_TITLE, FONT_FAMILY, FONT_MONO, SOURCE_LABEL, THEMES
+from src.config import APP_SUBTITLE, APP_TITLE, FONT_FAMILY, FONT_MONO, SOURCE_LABEL, THEMES, DATA_SOURCE
 
 
 def get_palette(theme: str) -> dict:
@@ -180,7 +180,14 @@ def build_layout(tidy_df, snapshot_df, theme: str = "dark") -> html.Div:
                         ]
                     ),
                     html.Div(
-                        SOURCE_LABEL,
+                        (
+                            SOURCE_LABEL,
+                            html.A(
+                                DATA_SOURCE,
+                                href="https://databank.worldbank.org/data/download/WDI_CSV.zip",
+                                target="_blank",
+                            )
+                        ),
                         style={
                             "color": palette["muted_text"],
                             "fontSize": "0.9rem",
