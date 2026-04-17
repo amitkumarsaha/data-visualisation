@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dash import dcc, html
 
-from charts import (
+from src.charts import (
     build_bubble_chart,
     build_gdp_area,
     build_gdp_growth_line,

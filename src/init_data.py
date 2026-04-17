@@ -7,7 +7,7 @@ from zipfile import BadZipFile, ZipFile, is_zipfile
 
 import pandas as pd
 
-from config import (
+from src.config import (
     ARGENTINA_SNAPSHOT_PATH,
     ARGENTINA_TIDY_PATH,
     COUNTRY_CODE,

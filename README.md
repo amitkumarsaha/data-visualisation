@@ -92,7 +92,7 @@ python -m src.init_data
 3. Start the dashboard:
 
 ```bash
-python app.py
+python -m src.app
 ```
 
 4. Open the local Dash URL shown in the terminal, usually:

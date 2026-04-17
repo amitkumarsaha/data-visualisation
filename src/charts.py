@@ -5,7 +5,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
-from config import (
+from src.config import (
     CHART_HEIGHTS,
     FONT_FAMILY,
     INDICATORS,
